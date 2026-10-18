@@ -3,7 +3,7 @@
  * https://leetcode.com/problems/add-two-numbers/
  *
  * Difficulty: Med
- * Topic: Linked List / Simulation
+ * Topic: Linked List / Math / Recursion
  * Time: O(max(n,m)) | Space: O(max(n,m))
  *
  * Approach:
