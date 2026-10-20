@@ -2,7 +2,7 @@
  * LeetCode #0002 - Add Two Numbers
  * https://leetcode.com/problems/add-two-numbers/
  *
- * Difficulty: Med
+ * Difficulty: Medium
  * Topic: Linked List / Math / Recursion
  * Time: O(max(n,m)) | Space: O(max(n,m))
  *
