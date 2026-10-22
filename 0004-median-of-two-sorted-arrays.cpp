@@ -4,57 +4,58 @@
  *
  * Difficulty: Hard
  * Topic: Array, Binary Search
- * Time: O(M+N) | Space: O(M+N)
+ * Time: O(log(ming(M+N))) - binary search the smaller array | Space: O(1) - constant number of variables
  *
  * Approach:
- * - Use two pointers to traverse both sorted arrays.
- * - Merge their elements into a new sorted vector.
- * - Calculate the median using the middle element(s).
- * - For odd lengths, return the middle element.
- * - For even lengths, return the average of the two middle elements.
- * 
- * Note: Does not satisfy the required O(log(M + N)) time complexity.
-
+ * - Binary search the smaller array to find the correct partition.
+ * - Divide both arrays into left and right halves.
+ * - Validate the partition using the boundary elements.
+ * - Adjust the binary search bounds until a valid partition is found.
+ * - Calculate the median from the partition boundaries.
+ *
  */
 
 #include <vector>
+#include <algorithm> // min, max, 
+#include <climits> // INT_MIN, INT_MAX
 using namespace std;
 
 class Solution {
 public:
     double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
-        int totalLength = nums1.size() + nums2.size();
-            vector<int> nums3;
-            //compare index with index
-            int i =0;
-            int j =0;
-            while(i < nums1.size() && j<nums2.size()){
-                if(nums1[i] <= nums2[j]){
-                    nums3.push_back(nums1[i]);
-                    i++;
+        if(nums1.size() > nums2.size()){
+            return findMedianSortedArrays(nums2, nums1);
+        }
+
+        int m = nums1.size(); 
+        int n = nums2.size();
+        int totalLeft = (m + n + 1) /2;
+
+        int low = 0;
+        int high = m; // smaller vector
+
+        double median;
+        while (low<=high){
+            int partition1 = low + (high-low)/2;
+            int partition2 = totalLeft - partition1;
+
+            int left1 = (partition1==0)? INT_MIN: nums1[partition1-1]; //left bound
+            int right1 = (partition1==m)? INT_MAX: nums1[partition1]; //right bound
+            int left2 = (partition2==0)? INT_MIN: nums2[partition2-1];
+            int right2 = (partition2==n)? INT_MAX: nums2[partition2];
+
+            if(left1 <= right2 && left2 <= right1){
+                if((m+n) % 2 == 0){
+                    return median = ((double)max(left1, left2) + min(right1, right2))/2.0;
                 }else{
-                    nums3.push_back(nums2[j]);
-                    j++;
+                    return max(left1, left2);
                 }
+            }else if(left1 > right2){
+                high = partition1 -1;
+            }else if(left2 > right1){
+                low = partition1 + 1; 
             }
-            if(i==nums1.size()){
-                while(j<nums2.size()){
-                    nums3.push_back(nums2[j]);
-                    j++;
-                }
-            }else{
-                while(i<nums1.size()){
-                    nums3.push_back(nums1[i]);
-                    i++;
-                }
-            }
-            int half = nums3.size() / 2;
-            double median=0;
-            if(totalLength%2 == 0){
-                median = (nums3[half] + nums3[half-1]) /2.0;
-            }else{
-                median = nums3[half];
-            }
-            return median;
+        }
+        return 0.0;
     }
 };
