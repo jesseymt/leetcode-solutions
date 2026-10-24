@@ -4,7 +4,7 @@
  *
  * Difficulty: Medium
  * Topic: Array, Prefix Sum
- * Time: O(N) | Space: O(1)
+ * Time: O(N) | Space: O(1) auxiliary, O(N) output
  *
  * Approach:
  * Store prefix products directly in the answer vector.
