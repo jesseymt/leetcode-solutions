@@ -4,7 +4,7 @@
  *
  * Difficulty: Medium
  * Topic: Stack
- * Time: O(N) | Space: O(1)
+ * Time: O(1) | Space: O(n)
  *
  * Approach:
  * Use two vectors: one to store stack elements and another
