@@ -7,7 +7,11 @@
  * Time: O(M log N) | Space: O(1)
  *
  * Approach:
- * working on optimal approach
+ * Use binary search to locate the row that could contain the target.
+ * Compare the target with the first and last elements of the middle row.
+ * If the target is within that range, perform binary search on that row.
+ * Otherwise, adjust the row search boundaries accordingly.
+ * Return true if the target is found, otherwise false.
  */
 
 #include <vector>
