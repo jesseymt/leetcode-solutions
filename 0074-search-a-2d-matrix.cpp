@@ -18,19 +18,31 @@ public:
     bool searchMatrix(vector<vector<int>>& matrix, int target) {
         int m = matrix.size();
         int n = matrix[0].size();
-        for(int i=0; i < m; i++){
-            int left = 0;
-            int right = n - 1;
-            while(left <= right){
-                int middle = left + (right - left)/2;
-                int num = matrix[i][middle];
-                if(num == target){
-                    return true;
-                }else if(num < target){
-                    left = middle + 1;
-                }else{
-                    right = middle - 1;
+        int i =0;
+        int up = 0;
+        int down = m - 1;
+        while (up <= down){
+            int middle1 = up + (down - up)/2;
+            int first = matrix[middle1][0];
+            int last = matrix[middle1][n-1];
+            if(target >= first && target <= last){
+                int left = 0;
+                int right = n-1;
+                while(left <= right){
+                    int middle2 = left + (right - left)/2;
+                    if(target == matrix[middle1][middle2]){
+                        return true;
+                    }else if(target < matrix[middle1][middle2]){
+                        right = middle2 - 1;
+                    }else{
+                        left = middle2 + 1;
+                    }
                 }
+                return false;
+            }else if(target < first){
+                down = middle1 -1;
+            }else if(target > last){
+                up = middle1 +1;
             }
         }
         return false;
