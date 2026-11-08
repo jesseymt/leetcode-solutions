@@ -34,27 +34,38 @@ class TimeMap {
 public:
     unordered_map<string, vector<pair<int, string>>> hash;
 
-    TimeMap() {    }
-    
+    TimeMap() {}
+
     void set(string key, string value, int timestamp) {
         hash[key].push_back({timestamp, value});
     }
-    
+
     string get(string key, int timestamp) {
+        auto it = hash.find(key);
+
+        if (it == hash.end()) {
+            return "";
+        }
+
+        const auto& entries = it->second;
+
         int left = 0;
-        int right = static_cast<int>(hash[key].size()) -1;
+        int right = entries.size() - 1;
         string ans = "";
-        while (left <= right){
-            int middle = left + (right - left)/2;
-            if(hash[key][middle].first == timestamp){
-                return hash[key][middle].second;
-            }else if(hash[key][middle].first < timestamp){
-                ans = hash[key][middle].second;
+
+        while (left <= right) {
+            int middle = left + (right - left) / 2;
+
+            if (entries[middle].first == timestamp) {
+                return entries[middle].second;
+            } else if (entries[middle].first < timestamp) {
+                ans = entries[middle].second;
                 left = middle + 1;
-            }else{
-                right = middle -1;
+            } else {
+                right = middle - 1;
             }
         }
+
         return ans;
     }
 };
