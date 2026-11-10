@@ -21,7 +21,6 @@
  * new head of the reversed linked list.
  */
 
-#include <vector>
 using namespace std;
 
 
