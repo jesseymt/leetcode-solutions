@@ -7,16 +7,11 @@
  * Time: O(n) | Space: O(H)
  *
  * Approach:
- * Recursively traverse both binary trees simultaneously.
- * 
- * Check whether either node is null while the other is not.
- * 
- * If both nodes are null, return from the current recursive call.
- * 
- * Compare the values of corresponding nodes and update the shared
- * boolean flag if a mismatch is found.
- * 
- * Recursively check the left and right subtrees.
+ * Recursively compare corresponding nodes in both trees.
+ * Return true if both nodes are null.
+ * Return false if only one node is null or their values differ.
+ * Recursively compare the left and right subtrees using logical AND.
+ * Return true only if both subtrees are identical.\
  */
 
 // Definition for a binary tree node.
@@ -30,23 +25,17 @@ struct TreeNode {
 };
 
 class Solution {
-    void check(bool& same, TreeNode* p, TreeNode* q){
-        if(p == nullptr && q != nullptr || p != nullptr && q == nullptr || !same){
-            same = false;
-            return;
-        }else if(p == nullptr && q == nullptr){
-            return;}
-        if(p->val != q->val){
-            same = false;
-            return;
-        }
-        check(same, p->left, q->left);
-        check(same, p->right, q->right);
-    }
 public:
     bool isSameTree(TreeNode* p, TreeNode* q) {
-        bool same = true;
-        check(same, p, q);
-        return same;
+        if(p==nullptr && q==nullptr){
+            return true;
+        }
+        if(p==nullptr || q==nullptr){
+            return false;
+        }
+        if(p->val != q->val){
+            return false;
+        }
+        return isSameTree(p->left, q->left) && isSameTree(p->right, q->right);
     }
 };
