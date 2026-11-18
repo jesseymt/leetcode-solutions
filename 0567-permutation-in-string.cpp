@@ -23,27 +23,40 @@
 using namespace std;
 
 class Solution {
+    void update(vector<int>& freq, int& nonzero, int idx, int change){
+        if(freq[idx] == 0){
+            nonzero++;
+        }
+        freq[idx] += change;
+        if(freq[idx] == 0){
+            nonzero--;
+        }
+    }
 public:
     bool checkInclusion(string s1, string s2) {
         if(s1.size() > s2.size()){
             return false;
         }
         vector<int> freq1(26,0);
-        vector<int> freq2(26,0);
         int left = 0;
         int right = 0;
-        
+        int nonzero = 0;
         for(char c: s1){
             freq1[c - 'a']++;
         }
+        for(int num: freq1){
+            if(num != 0){
+                nonzero++;
+            }
+        }
         
         while(right < s2.size()){
-            freq2[s2[right] - 'a']++;
+            update(freq1, nonzero, s2[right] - 'a', -1);
             if(right - left + 1 > s1.size()){
-                freq2[s2[left] - 'a']--;
+                update(freq1, nonzero, s2[left] - 'a', 1);
                 left++;
             }
-            if(freq1 == freq2){
+            if(nonzero == 0){
                 return true;
             }
             right++;
