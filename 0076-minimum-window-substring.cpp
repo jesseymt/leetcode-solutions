@@ -7,94 +7,91 @@
  * Time: O(n + m) | Space: O(1)
  *
  * Approach:
- * Use a sliding window with an unordered_map to track the remaining
- * frequencies of characters required from t.
+ * Use a sliding window with a fixed-size ASCII frequency array of 128
+ * integers to track the remaining occurrences of characters from t.
  *
- * Initialize the map with character counts from t and track the number
- * of distinct characters whose required frequencies are not yet satisfied.
+ * Initialize the array with frequencies from t and set remaining to
+ * the total number of required characters, including duplicates.
  *
- * Expand the right pointer, decrementing frequencies for relevant
- * characters. When a frequency reaches zero, decrement remaining_t.
+ * Expand the right pointer. If the current character's frequency is
+ * positive, decrement remaining. Always decrement its frequency,
+ * allowing negative values to represent extra occurrences.
  *
- * Once remaining_t reaches zero, the window is valid. Record its length
- * and starting index if it is smaller than the previous minimum.
+ * When remaining reaches zero, the window contains all required
+ * characters. Update the minimum length and starting index if needed.
  *
- * Shrink the window by moving the left pointer, restoring frequencies.
- * If a frequency becomes positive, increment remaining_t because the
- * window no longer contains enough occurrences of that character.
+ * Shrink the window by incrementing the left character's frequency.
+ * If it becomes positive, increment remaining because a required
+ * occurrence is now missing. Continue until the window becomes invalid.
  *
- * Continue expanding and shrinking until the entire string is processed.
- * Return the shortest valid substring, or an empty string if none exists.
+ * Store only the best starting index and length to avoid repeatedly
+ * constructing substrings. Return the minimum substring once at the end.
+ * 
+ * Unlike the original unordered_map implementation, which tracks the
+ * number of distinct characters with unsatisfied frequencies, this
+ * version tracks the total number of missing character occurrences.
+ *
+ * Positive frequencies indicate missing occurrences, zero indicates
+ * exactly enough, and negative frequencies indicate extra occurrences.
+ *
+ * This eliminates the need to check whether a character exists in
+ * the map, since all characters can be indexed directly in the array.
+ * Only positive frequencies affect the remaining counter.
  */
 
-#include <unordered_map>
 #include <string>
 using namespace std;
 
 class Solution {
 public:
-    void updateLeft(const string& s, unordered_map<char, int>& freq_t, int& rem_t, int& left){
-        char c = s[left];
-        
-        if(freq_t.find(c) != freq_t.end()){
-            freq_t[c]++;
-            
-            if(freq_t.at(c) == 1){
-                rem_t++;
-            }
-        }
-        
-        left++;
-    }
-    void updateRight(const string& s, unordered_map<char, int>& freq_t, int& rem_t, int right){
-        char c = s[right];
-        
-        if(freq_t.find(c) != freq_t.end()){
-            freq_t[c]--;
-            if(freq_t.at(c) == 0){
-                rem_t--;
-            }
-        }
-        
-    }
-public:
     string minWindow(string s, string t) {
         if(t.size() > s.size()){
             return "";
         }
-        
-        unordered_map<char, int> freq_t;
-        for(char c: t){
-            freq_t[c]++;
+
+        int freq[128] = {};
+
+        for(char c : t){
+            freq[c]++;
         }
-        int remaining_t = freq_t.size();
-        
+
+        int remaining = t.size();
         int left = 0;
-        int right = 0;
         int minLen = INT_MAX;
         int minStart = 0;
-        
-        while(right < s.size()){
-            updateRight(s, freq_t, remaining_t, right);
-            
-            while(remaining_t == 0){
-                int currLen = right-left+1;
-                
-                if(currLen<minLen){
+
+        for(int right = 0; right < s.size(); right++){
+            char c = s[right];
+
+            if(freq[c] > 0){
+                remaining--;
+            }
+            freq[c]--;
+
+            while(remaining == 0){
+                int currLen = right - left + 1;
+
+                if(currLen < minLen){
                     minLen = currLen;
                     minStart = left;
                 }
-                
-                updateLeft(s, freq_t, remaining_t, left);
+
+                char leftChar = s[left];
+
+                freq[leftChar]++;
+
+                if(freq[leftChar] > 0){
+                    remaining++;
+                }
+
+                left++;
             }
-    
-            right++;
         }
-        
+
         if(minLen == INT_MAX){
             return "";
         }
-         
+
         return s.substr(minStart, minLen);
     }
 };
