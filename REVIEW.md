@@ -11,3 +11,4 @@ Problems to revisit for deeper understanding and independent implementation.
 | 0143 | Reorder List | Medium | Linked List, Two Pointers | Find middle using slow/fast pointers, reverse second half, merge alternately in place; review pointer reassignment and preserving next nodes. |
 | 0138 | Copy List with Random Pointer | Medium | Linked List / Hash Map | Deep copying nodes, random pointer mapping, and O(1) space interleaving approach |
 | 0287 | Find the Duplicate Number | Medium | Linked List / Floyd's Cycle Detection | Treat array values as indices, understand why the second collision identifies the cycle entrance, and achieve O(1) extra space without modifying the array. |
+| 0025 | Reverse Nodes in k-Group | Hard | Linked List | Group boundary verification, in-place reversal, pointer reconnection, and initializing prev to groupNext |
